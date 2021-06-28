@@ -1,1 +1,5 @@
 jsonRevit/config.json
+dataBase/data
+Result/
+dataBase/__pycache__/
+jsonRevit/__pycache__/
