@@ -58,17 +58,23 @@ class MainObject:
         cStruct["name"] = name
         typeObject = "CeilingTypes" if groupIndex in ['G', 'H'] else "WallTypes"
         revit[typeObject].append(cStruct)
-        self.fillupCompoundStructure(cStruct, systemId)
+        self.fillupCompoundStructure(cStruct["CompoundStructure"], systemId)
 
-  def fillupCompoundStructure(self, CStruct, systemId):
-    element = copy.deepcopy(self.__config.getData("elementStructure"))
+  def fillupCompoundStructure(self, CStructElement, systemId):
     for field, dictFields in self.__config.getData("idsProductCoeff").items():
-      print(field)
-      materialLabel = self.systems.findField(systemId, field)
-      if materialLabel:
-        print(systemId, field, dictFields, materialLabel)
-        print()
-    sys.exit()
+      # print(field)
+      productId = self.systems.findField(systemId, field)
+      if productId:
+        element = copy.deepcopy(self.__config.getData("elementStructure"))
+        position = self.systems.findField(systemId, "CompoundStructure_" + dictFields["number"]).replace('"', '')
+        CStructElement[position].append(element)
+        element["Function"] = self.systems.findField(systemId, "Function_" + dictFields["number"]).replace('"', '')
+        element["Material"] = self.products.findField(productId, "Libellé long")
+        # print(systemId, field, dictFields, productId)
+        print(position, CStructElement[position], element)
+        # print()
+    #     print()
+    # sys.exit()
 
 
   def __addError(self, systemId:str, message:str):
