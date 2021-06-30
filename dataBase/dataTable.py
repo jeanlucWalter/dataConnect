@@ -41,7 +41,7 @@ class DataTable:
     middleValue = data[middleIndex]
     if search == middleValue:
       return self.__findDichotomyValue(middleIndex, field)
-    if end - start <= 0:
+    if end - start <= 0 or not search:
       return None
     if search > middleValue:
       return self.__findDichotomy(search, middleIndex + 1, end, field, data)
