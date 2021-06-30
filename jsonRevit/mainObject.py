@@ -29,6 +29,7 @@ class MainObject:
     self.__errors = copy.copy(self.systems.errors)
     productsData = self.products.findListObjects(listIdProducts)
     revit = self.__computeRevit(systemsData, productsData)
+    self.__removeUnusedErrors()
     return {"systems":systemsData, "products":productsData, "revit":revit, "errors":self.__errors}
 
   def __computeListProducts(self, listIdSystems:'list(str)', listIdProducts:'list(str)') -> 'list(str)':
@@ -116,6 +117,14 @@ class MainObject:
     if not systemId in self.__errors:
       self.__errors[systemId] = []
     self.__errors[systemId].append(message)
+
+  def __removeUnusedErrors(self):
+    keysToRemove = []
+    for key, value in self.__errors.items():
+      if not value:
+        keysToRemove.append(key)
+    for key in keysToRemove:
+      del self.__errors[key]
 
 
 
