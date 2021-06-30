@@ -10,6 +10,7 @@ class MainObject:
     self.__jsonObject = {}
     self.__usedWidth = 0.0
     self.__emptyWidth = 0.0
+    self.__emptyStruct = None
     for typeObject in ["system", "product"]:
       fileName = self.__config.getData("jsonName")[typeObject]
       self.__jsonObject[typeObject] = DataRevit(fileName)
@@ -75,6 +76,8 @@ class MainObject:
         element["Function"] = funct.replace('"', '')
         element["Material"] = productId + " - " + productName if productName else productId
         element["width"] = self.__computeWidth(systemId, productId, element, field)
+    if self.__emptyStruct and self.__emptyWidth != 0.0:
+      self.__emptyStruct["width"] = self.__emptyWidth - self.__usedWidth
 
   def __computeWidth(self, systemId:str, productId:str, element:dict, field:str) -> float:
     widthDefault = float(element["width"])
@@ -93,9 +96,13 @@ class MainObject:
     elif element["Material"][:6] ==  "Z01.01" and field == "Vide de construction":
       emptyWidth = self.systems.findField(systemId, "Épaisseur totale du système (mm)")
       self.__emptyWidth = float(emptyWidth) if emptyWidth and type(emptyWidth) in [str, int] and type(float(emptyWidth)) == float else 0.0
+      self.__emptyStruct = element
       if not self.__emptyWidth:
+        self.__emptyWidth = widthDefault
         self.__addError(systemId, "field 'Épaisseur totale du système (mm)' has no value, default value used {}".format(str(widthDefault)))
-    return widthDefault
+    else:
+      width = self.products.findField(productId, "Epaisseur")
+      return self.__widthValueMessage(width, systemId, "{} has no width", widthDefault)
 
   def __widthValueMessage(self, width:str, systemId:str, message:str, widthDefault:float, thousand = False) -> float:
     if width:
