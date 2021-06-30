@@ -103,7 +103,7 @@ class MainObject:
         self.__addError(systemId, "field 'Épaisseur totale du système (mm)' has no value, default value used {}".format(str(widthDefault)))
     else:
       width = self.products.findField(productId, "Epaisseur")
-      return self.__widthValueMessage(width, systemId, "{} has no width", widthDefault)
+      return self.__widthValueMessage(width, systemId, "{} has no width".format(element["Material"]), widthDefault)
 
   def __widthValueMessage(self, width:str, systemId:str, message:str, widthDefault:float, thousand = False) -> float:
     if width:
