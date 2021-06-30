@@ -94,8 +94,7 @@ class MainObject:
       emptyWidth = self.systems.findField(systemId, "Épaisseur totale du système (mm)")
       self.__emptyWidth = float(emptyWidth) if emptyWidth and type(emptyWidth) in [str, int] and type(float(emptyWidth)) == float else 0.0
       if not self.__emptyWidth:
-        self.__addError(systemId, "field 'Épaisseur totale du système (mm)' has no value, default value used {}".format(str(widthDefault))
-      print("last elif", productId, element["Material"][:6])
+        self.__addError(systemId, "field 'Épaisseur totale du système (mm)' has no value, default value used {}".format(str(widthDefault)))
     return widthDefault
 
   def __widthValueMessage(self, width:str, systemId:str, message:str, widthDefault:float, thousand = False) -> float:
