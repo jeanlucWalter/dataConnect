@@ -5,29 +5,32 @@ import json
 
 class DataTable:
   def __init__(self, jsonFileName): #fields:[{}], ids:[str], data:[[]]
+    self._initCompute(jsonFileName)
+
+  def _initCompute(self, jsonFileName:str):
       with open(jsonFileName) as jsonFile:
         data = json.load(jsonFile)
       self.ids = data["ids"]
       self.fields = data["fields"]
       self.data = data["data"]
-
-      self.__errors = {}
+      self._errors = {}
+      return data
 
   @property
   def errors(self):
-    return self.__errors
+    return self._errors
 
   def findField(self, id:str, field:str):
-    if not id in self.__errors:
-      self.__errors[id] = []
+    if not id in self._errors:
+      self._errors[id] = []
     indexField = self.findByDichotomy (search = field, field = "fields")
     if type(indexField) == int:
       indexObject = self.findByDichotomy(search = id, field = "ids")
       if type(indexObject) == int:
         return self.__cleanString(self.data[indexObject][indexField])
-      self.__errors[id].append("no such id")
+      self._errors[id].append("no such id")
     else:
-      self.__errors[id].append("no field named : " + field)
+      self._errors[id].append("no field named : " + field)
     return None
 
   def findByDichotomy(self, search:str, field:str) -> int:
