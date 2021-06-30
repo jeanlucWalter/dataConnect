@@ -62,7 +62,6 @@ class MainObject:
 
   def fillupCompoundStructure(self, CStructElement, systemId):
     for field, dictFields in self.__config.getData("idsProductCoeff").items():
-      # print(field)
       productId = self.systems.findField(systemId, field)
       if productId:
         element = copy.deepcopy(self.__config.getData("elementStructure"))
@@ -70,11 +69,6 @@ class MainObject:
         CStructElement[position].append(element)
         element["Function"] = self.systems.findField(systemId, "Function_" + dictFields["number"]).replace('"', '')
         element["Material"] = self.products.findField(productId, "Libellé long")
-        # print(systemId, field, dictFields, productId)
-        print(position, CStructElement[position], element)
-        # print()
-    #     print()
-    # sys.exit()
 
 
   def __addError(self, systemId:str, message:str):
